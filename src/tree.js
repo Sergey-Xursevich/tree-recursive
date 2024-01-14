@@ -21,12 +21,13 @@ function printTree(directory, depth, currentDepth = 0) {
 
 function getAllFiles(dir, depth) {
     let currentDepth = 0;
-    return fs.readdirSync(dir).reduce((files, file) => {
+    return fs.readdirSync(dir).reduce((files, file, idx) => {
         const name = path.join(dir, file);
         const isDirectory = fs.statSync(name).isDirectory();
-        
+
         if (isDirectory && currentDepth < depth) {
             currentDepth++;
+            if (idx === 0) files.push(name); // push path of parent folder
             return [...files, ...getAllFiles(name)];
         }
 
