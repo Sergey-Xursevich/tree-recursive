@@ -1,5 +1,4 @@
 const fs = require('fs');
-const path = require('path');
 const main = require('../tree');
 
 let consoleLogSpy;
@@ -43,7 +42,6 @@ describe('Tree recursive feature', () => {
             isFile: () => false
         });
 
-
         const pathToDirectory = 'path/to/directory';
         process.argv = [undefined, undefined, pathToDirectory, '-d', '0'];
 
@@ -66,5 +64,54 @@ describe('Tree recursive feature', () => {
 
         // Assert
         expect(consoleErrorSpy).toHaveBeenCalledWith(message);
+    });
+
+    it('should print tree for a valid directory with depth argument', () => {
+        // Arrange
+        const mockReaddirSync = jest.spyOn(fs, 'readdirSync');
+        mockReaddirSync.mockReturnValueOnce(['subdir1', 'subdir2']);
+        mockReaddirSync.mockReturnValueOnce(['file1.txt', 'file2.txt']);
+        mockReaddirSync.mockReturnValueOnce(['subdir1', 'subdir2']);
+        mockReaddirSync.mockReturnValueOnce(['file1.txt', 'file2.txt']);
+        mockReaddirSync.mockReturnValueOnce(['subdir1', 'subdir2']);
+        mockReaddirSync.mockReturnValueOnce(['file1.txt', 'file2.txt']);
+
+        const mockStatExistsSync = jest.spyOn(fs, 'existsSync');
+        mockStatExistsSync.mockReturnValue(true);
+
+        const mockStatSync = jest.spyOn(fs, 'statSync');
+        mockStatSync.mockReturnValueOnce({ isDirectory: () => true });
+        mockStatSync.mockReturnValueOnce({ isDirectory: () => true });
+        mockStatSync.mockReturnValueOnce({ isDirectory: () => false });
+        mockStatSync.mockReturnValueOnce({ isDirectory: () => false });
+        mockStatSync.mockReturnValueOnce({ isDirectory: () => true });
+        mockStatSync.mockReturnValueOnce({ isDirectory: () => true });
+        mockStatSync.mockReturnValueOnce({ isDirectory: () => false });
+        mockStatSync.mockReturnValueOnce({ isDirectory: () => false });
+        mockStatSync.mockReturnValueOnce({ isDirectory: () => true });
+        mockStatSync.mockReturnValueOnce({ isDirectory: () => true });
+
+        mockStatSync.mockReturnValueOnce({ isDirectory: () => false });
+        mockStatSync.mockReturnValueOnce({ isDirectory: () => false });
+        mockStatSync.mockReturnValueOnce({ isDirectory: () => true });
+        mockStatSync.mockReturnValueOnce({ isDirectory: () => true });
+
+        mockStatSync.mockReturnValueOnce({ isFile: () => false });
+        mockStatSync.mockReturnValueOnce({ isFile: () => true });
+        mockStatSync.mockReturnValueOnce({ isFile: () => true });
+        mockStatSync.mockReturnValueOnce({ isFile: () => false });
+
+        const pathToDirectory = 'path/to/directory';
+        process.argv = [undefined, undefined, pathToDirectory, '-d', '1'];
+
+        // Act
+        main();
+
+        // Assert
+        expect(consoleLogSpy).toHaveBeenCalledWith('path/to/directory');
+        expect(consoleLogSpy).toHaveBeenCalledWith('├── subdir1');
+        expect(consoleLogSpy).toHaveBeenCalledWith('| ├── file1.txt');
+        expect(consoleLogSpy).toHaveBeenCalledWith('| └── file2.txt');
+        expect(consoleLogSpy).toHaveBeenCalledWith('└── subdir2');
     });
 });
