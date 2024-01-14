@@ -50,4 +50,4 @@ function main() {
     console.log(`\n${numDirectories} directories, ${numFiles} files`);
 }
 
-main();
+module.exports = main
