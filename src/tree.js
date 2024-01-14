@@ -19,10 +19,25 @@ function printTree(directory, depth, currentDepth = 0) {
     });
 }
 
-function countFilesAndDirectories(directory) {
-    const entries = fs.readdirSync(directory);
-    const numDirectories = entries.filter(entry => fs.statSync(path.join(directory, entry)).isDirectory()).length;
-    const numFiles = entries.filter(entry => fs.statSync(path.join(directory, entry)).isFile()).length;
+function getAllFiles(dir, depth) {
+    let currentDepth = 0;
+    return fs.readdirSync(dir).reduce((files, file) => {
+        const name = path.join(dir, file);
+        const isDirectory = fs.statSync(name).isDirectory();
+        
+        if (isDirectory && currentDepth < depth) {
+            currentDepth++;
+            return [...files, ...getAllFiles(name)];
+        }
+
+        return [...files, name];
+    }, []);
+}
+
+function countFilesAndDirectories(directory, depth = 0) {
+    const entries = getAllFiles(directory, depth);
+    const numDirectories = entries.filter(entry => fs.statSync(entry).isDirectory()).length;
+    const numFiles = entries.filter(entry => fs.statSync(entry).isFile()).length;
     return { numDirectories, numFiles };
 }
 
@@ -46,7 +61,7 @@ function main() {
     console.log(directory);
     printTree(directory, depth);
 
-    const { numDirectories, numFiles } = countFilesAndDirectories(directory);
+    const { numDirectories, numFiles } = countFilesAndDirectories(directory, depth);
     console.log(`\n${numDirectories} directories, ${numFiles} files`);
 }
 
