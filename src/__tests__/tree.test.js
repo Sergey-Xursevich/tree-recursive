@@ -90,6 +90,7 @@ describe('Tree recursive feature', () => {
         mockStatSync.mockReturnValueOnce({ isDirectory: () => false });
         mockStatSync.mockReturnValueOnce({ isDirectory: () => true });
         mockStatSync.mockReturnValueOnce({ isDirectory: () => true });
+        mockStatSync.mockReturnValueOnce({ isDirectory: () => true });
 
         mockStatSync.mockReturnValueOnce({ isDirectory: () => false });
         mockStatSync.mockReturnValueOnce({ isDirectory: () => false });
