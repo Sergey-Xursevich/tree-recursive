@@ -1,0 +1,23 @@
+{
+  "name": "tree-recursive",
+  "version": "1.0.0",
+  "description": "node.js",
+  "main": "src/tree.js",
+  "scripts": {
+    "test": "jest",
+    "test:coverage": "npm run test -- --collectCoverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sergey-Xursevich/tree-recursive.git"
+  },
+  "author": "Sergey Khursevich",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Sergey-Xursevich/tree-recursive/issues"
+  },
+  "homepage": "https://github.com/Sergey-Xursevich/tree-recursive#readme",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
