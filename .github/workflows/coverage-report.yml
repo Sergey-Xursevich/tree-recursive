@@ -26,9 +26,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-      - run: |
-          npx run test:coverage
+        uses: actions/checkout@v4
+      - name: Run Test Coverage
+        run: npm run test:coverage
       - name: Setup Pages
         uses: actions/configure-pages@v2
       - name: Upload artifact
